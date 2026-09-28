@@ -4,8 +4,8 @@
  * Supports local testing via ?local=1 query param or localStorage
  */
 
-// Production URLs (GitHub raw)
-const PROD_DATA_URL = "https://raw.githubusercontent.com/blueheron786/progress/data/main/metrics.json";
+// Production URLs (GitHub raw) - note: data branch uses /data/ not /data/main/
+const PROD_DATA_URL = "https://raw.githubusercontent.com/blueheron786/progress/data/metrics.json";
 const PROD_MANUAL_URL = "https://raw.githubusercontent.com/blueheron786/progress/main/manual-metrics.json";
 
 // Local file paths (relative to index.html)
