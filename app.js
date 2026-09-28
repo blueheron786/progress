@@ -164,24 +164,6 @@ async function main() {
 
   const { data: dataUrl, manual: manualUrl, mode } = getUrls();
   console.log(`[Progress] Running in ${mode} mode`);
-  console.log(`[Progress] Data URL: ${dataUrl}`);
-  console.log(`[Progress] Manual URL: ${manualUrl}`);
-
-  // Add visible debug element
-  const debugEl = document.createElement('pre');
-  debugEl.id = 'debug-output';
-  debugEl.style.cssText = 'background:#f5f5f5;padding:10px;font-size:12px;max-height:300px;overflow:auto;margin-bottom:20px;border:1px solid #ddd;';
-  document.body.insertBefore(debugEl, document.body.firstChild);
-  
-  function debugLog(msg) {
-    console.log(msg);
-    debugEl.textContent += msg + '\n';
-    debugEl.scrollTop = debugEl.scrollHeight;
-  }
-
-  debugLog(`Mode: ${mode}`);
-  debugLog(`Data URL: ${dataUrl}`);
-  debugLog(`Manual URL: ${manualUrl}`);
 
   try {
     // Fetch both data sources in parallel
@@ -189,12 +171,6 @@ async function main() {
       fetchJSON(dataUrl),
       fetchJSON(manualUrl),
     ]);
-
-    debugLog('autoData keys: ' + Object.keys(autoData || {}));
-    debugLog('manualData keys: ' + Object.keys(manualData || {}));
-    debugLog('manualData.goals: ' + JSON.stringify(manualData?.goals, null, 2).slice(0, 500));
-    debugLog('manualData.goals.technology: ' + JSON.stringify(manualData?.goals?.technology, null, 2).slice(0, 500));
-    debugLog('manualData.goals.technology.pagesCrawledPerDay: ' + JSON.stringify(manualData?.goals?.technology?.pagesCrawledPerDay, null, 2));
 
     // Merge: autoData has metrics + points + totals, manualData has goals + manual values
     const metrics = autoData.metrics;
