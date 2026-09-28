@@ -84,9 +84,12 @@ function renderCategoryTable(categoryName, metrics, goals, manualConfig) {
 
   for (const def of defs) {
     const value = metrics[def.key];
-    const goal = categoryGoals[def.pointsKey]?.goal || "—";
+    // Fallback for pagesCrawledPerDay goal if not found in manual config
+    const fallbackGoal = def.pointsKey === "pagesCrawledPerDay" ? 3000000000 : "—";
+    const fallbackMaxPoints = def.pointsKey === "pagesCrawledPerDay" ? 150000 : "—";
+    const goal = categoryGoals[def.pointsKey]?.goal ?? fallbackGoal;
     const points = metrics.points?.[def.pointsKey] || 0;
-    const maxPoints = categoryGoals[def.pointsKey]?.maxPoints || "—";
+    const maxPoints = categoryGoals[def.pointsKey]?.maxPoints ?? fallbackMaxPoints;
 
     let displayValue = value;
     if (def.key === "pagesCrawledPerDay") {
