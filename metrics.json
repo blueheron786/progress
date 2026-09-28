@@ -1,0 +1,57 @@
+{
+  "metrics": {
+    "commits": 743,
+    "pagesCrawledPerDay": 2500000,
+    "ndcg": 10,
+    "blogPosts": 6,
+    "videos": 10,
+    "volunteers": 26,
+    "employees": 0,
+    "incorporationPoints": 0,
+    "affiliatedOrgs": 0,
+    "bookCommits": 44,
+    "collectedAt": "2025-06-01T00:00:00.000Z",
+    "repos": [
+      { "label": "mwmbl (backend)", "commits": 500 },
+      { "label": "mwmbl_rank (Rust)", "commits": 100 },
+      { "label": "front-end (SvelteKit)", "commits": 100 },
+      { "label": "book (documentation)", "commits": 44 }
+    ]
+  },
+  "points": {
+    "commits": 743,
+    "pagesCrawled": 125,
+    "ndcg": 10000,
+    "blogPosts": 600,
+    "videos": 1000,
+    "volunteers": 26,
+    "employees": 0,
+    "incorporation": 0,
+    "affiliatedOrgs": 0,
+    "bookCommits": 440
+  },
+  "totals": {
+    "current": 12959,
+    "max": 915000,
+    "percentage": 1.4163
+  },
+  "goals": {
+    "technology": {
+      "commits": { "goal": 100000, "pointsPer": 1, "maxPoints": 100000 },
+      "pagesCrawledPerDay": { "goal": 3000000000, "pointsPerMillion": 50, "maxPoints": 150000 },
+      "ndcg": { "goal": 80, "pointsPerPercent": 1000, "maxPoints": 80000 }
+    },
+    "community": {
+      "blogPosts": { "goal": 250, "pointsPer": 100, "maxPoints": 25000 },
+      "videos": { "goal": 1000, "pointsPer": 100, "maxPoints": 100000 },
+      "volunteers": { "goal": 100000, "pointsPer": 1, "maxPoints": 100000 }
+    },
+    "organisation": {
+      "employees": { "goal": 20, "pointsPer": 5000, "maxPoints": 100000 },
+      "incorporation": { "maxPoints": 60000 },
+      "affiliatedOrgs": { "goal": 100, "pointsPer": 1000, "maxPoints": 100000 },
+      "bookCommits": { "goal": 10000, "pointsPer": 10, "maxPoints": 100000 }
+    }
+  },
+  "collectedAt": "2025-06-01T00:00:00.000Z"
+}

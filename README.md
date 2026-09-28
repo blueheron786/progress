@@ -64,6 +64,30 @@ npx serve .
 python3 -m http.server 8000
 ```
 
+### Local Testing (No GitHub Required)
+
+The page auto-detects local mode when running on `localhost`, `127.0.0.1`, or `file://` protocol. It will fetch `metrics.json` and `manual-metrics.json` from the local filesystem instead of GitHub.
+
+**To test locally:**
+1. Run a local server: `python3 -m http.server 8000`
+2. Open `http://localhost:8000` — it will use local `metrics.json` automatically
+
+**To force production mode locally:**
+- Add `?local=0` to URL: `http://localhost:8000?local=0`
+
+**To force local mode on production:**
+- Add `?local=1` to URL, or
+- Run in console: `progressDebug.toggleLocal()`
+
+**Console debugging:**
+```js
+progressDebug.isLocal()        // true/false
+progressDebug.getUrls()        // { data, manual, mode }
+progressDebug.toggleLocal()    // Switch mode & reload
+```
+
+A sample `metrics.json` is included in the repo with example data matching the book.mwmbl.org progress page (June 2025 snapshot).
+
 ## Deployment Setup
 
 ### 1. Create GitHub Repository

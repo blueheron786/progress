@@ -1,16 +1,52 @@
 /**
  * Mwmbl Progress Page - Client-side rendering
  * Fetches auto-collected metrics (data branch) + manual config (main branch)
+ * Supports local testing via ?local=1 query param or localStorage
  */
 
-const DATA_BRANCH_URL = "https://raw.githubusercontent.com/mwmbl/progress/data/main/metrics.json";
-const MAIN_BRANCH_URL = "https://raw.githubusercontent.com/mwmbl/progress/main/manual-metrics.json";
+// Production URLs (GitHub raw)
+const PROD_DATA_URL = "https://raw.githubusercontent.com/mwmbl/progress/data/main/metrics.json";
+const PROD_MANUAL_URL = "https://raw.githubusercontent.com/mwmbl/progress/main/manual-metrics.json";
+
+// Local file paths (relative to index.html)
+const LOCAL_DATA_URL = "metrics.json";
+const LOCAL_MANUAL_URL = "manual-metrics.json";
+
+function isLocalMode() {
+  // Check query param ?local=1
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("local") === "1") return true;
+  // Check localStorage preference
+  if (localStorage.getItem("progress-local-mode") === "true") return true;
+  // Auto-detect localhost/file://
+  return location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
+}
+
+function getUrls() {
+  const local = isLocalMode();
+  return {
+    data: local ? LOCAL_DATA_URL : PROD_DATA_URL,
+    manual: local ? LOCAL_MANUAL_URL : PROD_MANUAL_URL,
+    mode: local ? "local" : "production"
+  };
+}
 
 async function fetchJSON(url) {
   const response = await fetch(url, { cache: "no-store" });
   if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.status}`);
   return response.json();
 }
+
+// Expose for console debugging
+window.progressDebug = {
+  toggleLocal: () => {
+    const next = !isLocalMode();
+    localStorage.setItem("progress-local-mode", next);
+    location.reload();
+  },
+  isLocal: isLocalMode,
+  getUrls: getUrls
+};
 
 function formatNumber(n) {
   return n.toLocaleString();
@@ -124,11 +160,14 @@ async function main() {
   const totalMaxEl = document.getElementById("totalMax");
   const totalProgressBarEl = document.getElementById("totalProgressBar");
 
+  const { data: dataUrl, manual: manualUrl, mode } = getUrls();
+  console.log(`[Progress] Running in ${mode} mode`);
+
   try {
     // Fetch both data sources in parallel
     const [autoData, manualData] = await Promise.all([
-      fetchJSON(DATA_BRANCH_URL),
-      fetchJSON(MAIN_BRANCH_URL),
+      fetchJSON(dataUrl),
+      fetchJSON(manualUrl),
     ]);
 
     // Merge: autoData has metrics + points + totals, manualData has goals + manual values
@@ -139,7 +178,7 @@ async function main() {
 
     // Update last updated timestamp
     const collectedAt = new Date(autoData.collectedAt);
-    lastUpdatedEl.textContent = `Last updated: ${collectedAt.toLocaleDateString()} ${collectedAt.toLocaleTimeString()} UTC`;
+    lastUpdatedEl.textContent = `Last updated: ${collectedAt.toLocaleDateString()} ${collectedAt.toLocaleTimeString()} UTC (${mode} mode)`;
 
     // Update grand total
     totalPercentageEl.textContent = `${totals.percentage}%`;
