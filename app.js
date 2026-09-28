@@ -164,6 +164,8 @@ async function main() {
 
   const { data: dataUrl, manual: manualUrl, mode } = getUrls();
   console.log(`[Progress] Running in ${mode} mode`);
+  console.log(`[Progress] Data URL: ${dataUrl}`);
+  console.log(`[Progress] Manual URL: ${manualUrl}`);
 
   try {
     // Fetch both data sources in parallel
@@ -171,6 +173,12 @@ async function main() {
       fetchJSON(dataUrl),
       fetchJSON(manualUrl),
     ]);
+
+    console.log('[Progress] autoData:', autoData);
+    console.log('[Progress] manualData:', manualData);
+    console.log('[Progress] manualData.goals:', manualData?.goals);
+    console.log('[Progress] manualData.goals.technology:', manualData?.goals?.technology);
+    console.log('[Progress] manualData.goals.technology.pagesCrawledPerDay:', manualData?.goals?.technology?.pagesCrawledPerDay);
 
     // Merge: autoData has metrics + points + totals, manualData has goals + manual values
     const metrics = autoData.metrics;
