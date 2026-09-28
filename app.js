@@ -90,7 +90,8 @@ function renderCategoryTable(categoryName, metrics, goals, manualConfig) {
 
     let displayValue = value;
     if (def.key === "pagesCrawledPerDay") {
-      displayValue = `${formatNumber(Math.round(value / 1_000_000))}M`;
+      const millions = value / 1_000_000;
+      displayValue = `${millions >= 1 ? formatNumber(Math.round(millions)) : millions.toFixed(1)}M`;
     } else if (def.key === "ndcg") {
       displayValue = `${value}%`;
     } else if (def.key === "incorporationPoints") {
@@ -101,7 +102,8 @@ function renderCategoryTable(categoryName, metrics, goals, manualConfig) {
 
     let goalDisplay = goal;
     if (def.key === "pagesCrawledPerDay") {
-      goalDisplay = `${formatNumber(Math.round(goal / 1_000_000))}M`;
+      const goalMillions = goal / 1_000_000;
+      goalDisplay = `${goalMillions >= 1 ? formatNumber(Math.round(goalMillions)) : goalMillions.toFixed(1)}M`;
     }
 
     const isManual = (categoryName === "community" && ["videos", "volunteers"].includes(def.key)) ||
