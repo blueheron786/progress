@@ -1,7 +1,7 @@
 {
   "metrics": {
     "commits": 743,
-    "pagesCrawledPerDay": 2500000,
+    "pagesCrawledPerDay": 318373,
     "ndcg": 10,
     "blogPosts": 6,
     "videos": 10,
@@ -10,7 +10,7 @@
     "incorporationPoints": 0,
     "affiliatedOrgs": 0,
     "bookCommits": 44,
-    "collectedAt": "2025-06-01T00:00:00.000Z",
+    "collectedAt": "2026-09-28T00:00:00.000Z",
     "repos": [
       { "label": "mwmbl (backend)", "commits": 500 },
       { "label": "mwmbl_rank (Rust)", "commits": 100 },
@@ -20,7 +20,7 @@
   },
   "points": {
     "commits": 743,
-    "pagesCrawled": 125,
+    "pagesCrawled": 15,
     "ndcg": 10000,
     "blogPosts": 600,
     "videos": 1000,
@@ -31,9 +31,9 @@
     "bookCommits": 440
   },
   "totals": {
-    "current": 12959,
+    "current": 13824,
     "max": 915000,
-    "percentage": 1.4163
+    "percentage": 1.5108
   },
   "goals": {
     "technology": {
@@ -53,5 +53,5 @@
       "bookCommits": { "goal": 10000, "pointsPer": 10, "maxPoints": 100000 }
     }
   },
-  "collectedAt": "2025-06-01T00:00:00.000Z"
+  "collectedAt": "2026-09-28T00:00:00.000Z"
 }

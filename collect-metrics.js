@@ -17,10 +17,7 @@ if (!GITHUB_TOKEN) {
   console.error("ERROR: GITHUB_TOKEN not set");
   process.exit(1);
 }
-if (!MWMBL_API_KEY) {
-  console.error("ERROR: MWMBL_API_KEY not set");
-  process.exit(1);
-}
+// MWMBL_API_KEY is optional - crawler stats endpoint is public
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
@@ -83,21 +80,19 @@ async function getBlogPostCount() {
 
 async function getPagesCrawledPerDay() {
   try {
-    const response = await fetch(`${MWMBL_API_URL}/api/v1/crawler/stats/`, {
-      headers: {
-        "Authorization": `Bearer ${MWMBL_API_KEY}`,
-        "Accept": "application/json",
-      },
+    // Public endpoint - no auth needed for crawler stats
+    const response = await fetch(`${MWMBL_API_URL}/api/v1/crawler/stats`, {
+      headers: { "Accept": "application/json" },
     });
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
     const data = await response.json();
-    // The stats endpoint returns users_crawled_daily, results_indexed_daily, etc.
-    // We want the latest day's results_indexed_daily
-    const today = new Date().toISOString().split("T")[0];
+    // Get the latest day's results_indexed_daily
     const results = data.results_indexed_daily || {};
-    return results[today] || 0;
+    const dates = Object.keys(results).sort();
+    const latestDate = dates[dates.length - 1];
+    return results[latestDate] || 0;
   } catch (error) {
     console.warn("Failed to get pages crawled:", error.message);
     return 0;
