@@ -1,0 +1,16 @@
+{
+  "name": "mwmbl-progress",
+  "version": "1.0.0",
+  "description": "Automated progress page for Mwmbl search engine",
+  "type": "module",
+  "scripts": {
+    "collect": "node collect-metrics.js",
+    "test": "node --test collect-metrics.js"
+  },
+  "dependencies": {
+    "octokit": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

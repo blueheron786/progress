@@ -1,0 +1,47 @@
+{
+  "description": "Manual/configurable metrics - edit rarely, commit to main branch",
+  "community": {
+    "videos": {
+      "value": 10,
+      "description": "YouTube video count - update when new videos published"
+    },
+    "volunteers": {
+      "value": 26,
+      "description": "Active volunteers (from Firefox extension stats) - update monthly"
+    }
+  },
+  "organisation": {
+    "employees": {
+      "value": 0,
+      "description": "Number of employees in parent organisation"
+    },
+    "incorporation": {
+      "ukNonprofit": false,
+      "ukCharity": false,
+      "usNonprofit": false,
+      "description": "Incorporation milestones - set to true when achieved"
+    },
+    "affiliatedOrgs": {
+      "value": 0,
+      "description": "Number of officially affiliated organisations"
+    }
+  },
+  "goals": {
+    "technology": {
+      "commits": { "goal": 100000, "pointsPer": 1, "maxPoints": 100000 },
+      "pagesCrawledPerDay": { "goal": 3000000000, "pointsPerMillion": 50, "maxPoints": 150000 },
+      "ndcg": { "goal": 80, "pointsPerPercent": 1000, "maxPoints": 80000 }
+    },
+    "community": {
+      "blogPosts": { "goal": 250, "pointsPer": 100, "maxPoints": 25000 },
+      "videos": { "goal": 1000, "pointsPer": 100, "maxPoints": 100000 },
+      "volunteers": { "goal": 100000, "pointsPer": 1, "maxPoints": 100000 }
+    },
+    "organisation": {
+      "employees": { "goal": 20, "pointsPer": 5000, "maxPoints": 100000 },
+      "incorporation": { "maxPoints": 60000 },
+      "affiliatedOrgs": { "goal": 100, "pointsPer": 1000, "maxPoints": 100000 },
+      "bookCommits": { "goal": 10000, "pointsPer": 10, "maxPoints": 100000 }
+    }
+  }
+}
