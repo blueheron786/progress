@@ -64,7 +64,7 @@ function renderCategoryTable(categoryName, metrics, goals, manualConfig) {
   const metricDefs = {
     technology: [
       { key: "commits", label: "Git commits (all repos)", unit: "", pointsKey: "commits" },
-      { key: "pagesCrawledPerDay", label: "Pages crawled per day", unit: "", pointsKey: "pagesCrawled" },
+      { key: "pagesCrawledPerDay", label: "Pages crawled per day", unit: "", pointsKey: "pagesCrawledPerDay" },
       { key: "ndcg", label: "NDCG score", unit: "%", pointsKey: "ndcg" },
     ],
     community: [

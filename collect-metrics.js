@@ -125,7 +125,7 @@ function calculatePoints(metrics) {
 
   // Technology
   points.commits = Math.min(metrics.commits, GOALS.technology.commits.maxPoints);
-  points.pagesCrawled = Math.min(
+  points.pagesCrawledPerDay = Math.min(
     Math.floor(metrics.pagesCrawledPerDay / 1_000_000) * GOALS.technology.pagesCrawledPerDay.pointsPerMillion,
     GOALS.technology.pagesCrawledPerDay.maxPoints
   );

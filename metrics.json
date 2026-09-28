@@ -20,7 +20,7 @@
   },
   "points": {
     "commits": 743,
-    "pagesCrawled": 15,
+    "pagesCrawledPerDay": 15,
     "ndcg": 10000,
     "blogPosts": 600,
     "videos": 1000,
