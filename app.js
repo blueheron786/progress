@@ -38,7 +38,19 @@ async function fetchJSON(url) {
 }
 
 function formatNumber(n) {
-  return n.toLocaleString();
+  if (n >= 1_000_000_000) {
+    const billions = n / 1_000_000_000;
+    return billions % 1 === 0 ? `${billions}B` : `${billions.toFixed(1).replace(/\.0$/, '')}B`;
+  }
+  if (n >= 1_000_000) {
+    const millions = n / 1_000_000;
+    return millions % 1 === 0 ? `${millions}M` : `${millions.toFixed(1).replace(/\.0$/, '')}M`;
+  }
+  if (n >= 1_000) {
+    const thousands = n / 1_000;
+    return thousands % 1 === 0 ? `${thousands}k` : `${thousands.toFixed(1).replace(/\.0$/, '')}k`;
+  }
+  return n.toString();
 }
 
 function renderProgressBar(element, percentage) {
@@ -82,8 +94,7 @@ function renderCategoryTable(categoryName, metrics, goals, manualConfig) {
 
     let displayValue = value;
     if (def.key === "pagesCrawledPerDay") {
-      const millions = value / 1_000_000;
-      displayValue = `${millions >= 1 ? formatNumber(Math.round(millions)) : millions.toFixed(1)}M`;
+      displayValue = formatNumber(value);
     } else if (def.key === "ndcg") {
       displayValue = `${value}%`;
     } else if (def.key === "incorporationPoints") {
@@ -92,11 +103,7 @@ function renderCategoryTable(categoryName, metrics, goals, manualConfig) {
       displayValue = formatNumber(value);
     }
 
-    let goalDisplay = goal;
-    if (def.key === "pagesCrawledPerDay") {
-      const goalMillions = goal / 1_000_000;
-      goalDisplay = `${goalMillions >= 1 ? formatNumber(Math.round(goalMillions)) : goalMillions.toFixed(1)}M`;
-    }
+    let goalDisplay = formatNumber(goal);
 
     const isManual = (categoryName === "community" && ["videos", "volunteers"].includes(def.key)) ||
                      (categoryName === "organisation" && ["employees", "incorporationPoints", "affiliatedOrgs"].includes(def.key));
