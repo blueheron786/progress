@@ -10,15 +10,11 @@
     "incorporationPoints": 0,
     "affiliatedOrgs": 0,
     "bookCommits": 56,
-    "collectedAt": "2026-09-29T17:01:18.198Z",
+    "collectedAt": "2026-09-29T17:25:49.381Z",
     "repos": [
       {
         "label": "mwmbl (backend)",
         "commits": 1452
-      },
-      {
-        "label": "mwmbl_rank (Rust)",
-        "commits": 0
       },
       {
         "label": "front-end (SvelteKit)",
@@ -103,5 +99,5 @@
       }
     }
   },
-  "collectedAt": "2026-09-29T17:01:18.198Z"
+  "collectedAt": "2026-09-29T17:25:49.381Z"
 }

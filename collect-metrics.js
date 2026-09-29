@@ -22,7 +22,6 @@ const octokit = new Octokit({ auth: GITHUB_TOKEN });
 // Repos to track commits for
 const REPOS = [
   { owner: "mwmbl", repo: "mwmbl", label: "mwmbl (backend)" },
-  { owner: "mwmbl", repo: "mwmbl_rank", label: "mwmbl_rank (Rust)" },
   { owner: "mwmbl", repo: "front-end", label: "front-end (SvelteKit)" },
   { owner: "mwmbl", repo: "book", label: "book (documentation)" },
 ];
@@ -172,7 +171,7 @@ async function main() {
   ]);
 
   const commits = commitResults.reduce((sum, c) => sum + c, 0);
-  const bookCommits = commitResults[3] || 0; // book repo is 4th
+  const bookCommits = commitResults[2] || 0; // book repo is 4th
 
   // Calculate incorporation points from manual config
   const incorporationPoints = [
