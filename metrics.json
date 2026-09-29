@@ -1,57 +1,107 @@
 {
   "metrics": {
-    "commits": 743,
-    "pagesCrawledPerDay": 318373,
+    "commits": 1666,
+    "totalPagesIndexed": 0,
     "ndcg": 10,
-    "blogPosts": 6,
+    "blogPosts": 1,
     "videos": 10,
     "volunteers": 26,
     "employees": 0,
     "incorporationPoints": 0,
     "affiliatedOrgs": 0,
-    "bookCommits": 44,
-    "collectedAt": "2026-09-28T00:00:00.000Z",
+    "bookCommits": 56,
+    "collectedAt": "2026-09-29T17:01:18.198Z",
     "repos": [
-      { "label": "mwmbl (backend)", "commits": 500 },
-      { "label": "mwmbl_rank (Rust)", "commits": 100 },
-      { "label": "front-end (SvelteKit)", "commits": 100 },
-      { "label": "book (documentation)", "commits": 44 }
+      {
+        "label": "mwmbl (backend)",
+        "commits": 1452
+      },
+      {
+        "label": "mwmbl_rank (Rust)",
+        "commits": 0
+      },
+      {
+        "label": "front-end (SvelteKit)",
+        "commits": 158
+      },
+      {
+        "label": "book (documentation)",
+        "commits": 56
+      }
     ]
   },
   "points": {
-    "commits": 743,
-    "pagesCrawledPerDay": 15,
+    "commits": 1666,
+    "totalPagesIndexed": 0,
     "ndcg": 10000,
-    "blogPosts": 600,
+    "blogPosts": 100,
     "videos": 1000,
     "volunteers": 26,
     "employees": 0,
     "incorporation": 0,
     "affiliatedOrgs": 0,
-    "bookCommits": 440
+    "bookCommits": 560
   },
   "totals": {
-    "current": 13824,
+    "current": 13352,
     "max": 915000,
-    "percentage": 1.5108
+    "percentage": 1.4592
   },
   "goals": {
     "technology": {
-      "commits": { "goal": 100000, "pointsPer": 1, "maxPoints": 100000 },
-      "pagesCrawledPerDay": { "goal": 3000000000, "pointsPerMillion": 50, "maxPoints": 150000 },
-      "ndcg": { "goal": 80, "pointsPerPercent": 1000, "maxPoints": 80000 }
+      "commits": {
+        "goal": 100000,
+        "pointsPer": 1,
+        "maxPoints": 100000
+      },
+      "totalPagesIndexed": {
+        "goal": 100000000000,
+        "pointsPerMillion": 50,
+        "maxPoints": 150000
+      },
+      "ndcg": {
+        "goal": 80,
+        "pointsPerPercent": 1000,
+        "maxPoints": 80000
+      }
     },
     "community": {
-      "blogPosts": { "goal": 250, "pointsPer": 100, "maxPoints": 25000 },
-      "videos": { "goal": 1000, "pointsPer": 100, "maxPoints": 100000 },
-      "volunteers": { "goal": 100000, "pointsPer": 1, "maxPoints": 100000 }
+      "blogPosts": {
+        "goal": 250,
+        "pointsPer": 100,
+        "maxPoints": 25000
+      },
+      "videos": {
+        "goal": 1000,
+        "pointsPer": 100,
+        "maxPoints": 100000
+      },
+      "volunteers": {
+        "goal": 100000,
+        "pointsPer": 1,
+        "maxPoints": 100000
+      }
     },
     "organisation": {
-      "employees": { "goal": 20, "pointsPer": 5000, "maxPoints": 100000 },
-      "incorporation": { "maxPoints": 60000 },
-      "affiliatedOrgs": { "goal": 100, "pointsPer": 1000, "maxPoints": 100000 },
-      "bookCommits": { "goal": 10000, "pointsPer": 10, "maxPoints": 100000 }
+      "employees": {
+        "goal": 20,
+        "pointsPer": 5000,
+        "maxPoints": 100000
+      },
+      "incorporation": {
+        "maxPoints": 60000
+      },
+      "affiliatedOrgs": {
+        "goal": 100,
+        "pointsPer": 1000,
+        "maxPoints": 100000
+      },
+      "bookCommits": {
+        "goal": 10000,
+        "pointsPer": 10,
+        "maxPoints": 100000
+      }
     }
   },
-  "collectedAt": "2026-09-28T00:00:00.000Z"
+  "collectedAt": "2026-09-29T17:01:18.198Z"
 }

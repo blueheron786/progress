@@ -65,7 +65,7 @@ function renderCategoryTable(categoryName, metrics, goals, manualConfig) {
   const metricDefs = {
     technology: [
       { key: "commits", label: "Git commits (all repos)", unit: "", pointsKey: "commits" },
-      { key: "pagesCrawledPerDay", label: "Pages crawled per day", unit: "", pointsKey: "pagesCrawledPerDay" },
+      { key: "totalPagesIndexed", label: "Total pages indexed", unit: "", pointsKey: "totalPagesIndexed" },
       { key: "ndcg", label: "NDCG score", unit: "%", pointsKey: "ndcg" },
     ],
     community: [
@@ -85,15 +85,15 @@ function renderCategoryTable(categoryName, metrics, goals, manualConfig) {
 
   for (const def of defs) {
     const value = metrics[def.key];
-    // Fallback for pagesCrawledPerDay goal if not found in manual config
-    const fallbackGoal = def.pointsKey === "pagesCrawledPerDay" ? 3000000000 : "—";
-    const fallbackMaxPoints = def.pointsKey === "pagesCrawledPerDay" ? 150000 : "—";
+    // Fallback for totalPagesIndexed goal if not found in manual config
+    const fallbackGoal = def.pointsKey === "totalPagesIndexed" ? 100000000000 : "—";
+    const fallbackMaxPoints = def.pointsKey === "totalPagesIndexed" ? 150000 : "—";
     const goal = categoryGoals[def.pointsKey]?.goal ?? fallbackGoal;
     const points = metrics.points?.[def.pointsKey] || 0;
     const maxPoints = categoryGoals[def.pointsKey]?.maxPoints ?? fallbackMaxPoints;
 
     let displayValue = value;
-    if (def.key === "pagesCrawledPerDay") {
+    if (def.key === "totalPagesIndexed") {
       displayValue = formatNumber(value);
     } else if (def.key === "ndcg") {
       displayValue = `${value}%`;

@@ -29,7 +29,7 @@
   "goals": {
     "technology": {
       "commits": { "goal": 100000, "pointsPer": 1, "maxPoints": 100000 },
-      "pagesCrawledPerDay": { "goal": 3000000000, "pointsPerMillion": 50, "maxPoints": 150000 },
+      "totalPagesIndexed": { "goal": 100000000000, "pointsPerMillion": 50, "maxPoints": 150000 },
       "ndcg": { "goal": 80, "pointsPerPercent": 1000, "maxPoints": 80000 }
     },
     "community": {

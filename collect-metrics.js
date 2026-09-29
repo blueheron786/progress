@@ -2,7 +2,8 @@
 /**
  * Collect all progress metrics and write to metrics.json
  * Run via: npm run collect
- * Requires: GITHUB_TOKEN, MWMBL_API_KEY, MWMBL_API_URL env vars
+ * Requires: MWMBL_API_URL env var
+ * Optional: GITHUB_TOKEN (for higher rate limits), MWMBL_API_KEY
  */
 
 import { Octokit } from "octokit";
@@ -13,11 +14,8 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const MWMBL_API_KEY = process.env.MWMBL_API_KEY;
 const MWMBL_API_URL = process.env.MWMBL_API_URL || "https://api.mwmbl.org";
 
-if (!GITHUB_TOKEN) {
-  console.error("ERROR: GITHUB_TOKEN not set");
-  process.exit(1);
-}
 // MWMBL_API_KEY is optional - crawler stats endpoint is public
+// GITHUB_TOKEN is optional - unauthenticated requests work but are rate limited (60/hr)
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
@@ -38,25 +36,38 @@ const GOALS = manualMetrics.goals;
 
 async function getCommitCount(owner, repo) {
   try {
-    // Use the GitHub API to get commit count
-    // We'll use the contributors endpoint with anon=1 to get total commits
-    const response = await octokit.rest.repos.getCommitActivityStats({
+    // Use the GitHub API to get total commit count from contributors stats (all-time)
+    const contributors = await octokit.rest.repos.getContributorsStats({
       owner,
       repo,
     });
-    // Sum all weeks
-    return response.data.reduce((sum, week) => sum + week.total, 0);
+    if (!Array.isArray(contributors.data)) {
+      throw new Error("Unexpected response format");
+    }
+    return contributors.data.reduce((sum, c) => sum + (c.total || 0), 0);
   } catch (error) {
-    console.warn(`Failed to get commit count for ${owner}/${repo}:`, error.message);
-    // Fallback: try to get from contributors
+    // 404 means the repo doesn't have contributor stats (e.g., empty repo or disabled)
+    if (error.message.includes("404") || error.message.includes("Not Found")) {
+      console.warn(`No contributor stats for ${owner}/${repo} (404)`);
+    } else {
+      console.warn(`Failed to get commit count from contributors for ${owner}/${repo}:`, error.message);
+    }
+    // Fallback: try commit activity stats (last year only)
     try {
-      const contributors = await octokit.rest.repos.getContributorsStats({
+      const response = await octokit.rest.repos.getCommitActivityStats({
         owner,
         repo,
       });
-      return contributors.data.reduce((sum, c) => sum + c.total, 0);
+      if (!Array.isArray(response.data)) {
+        throw new Error("Unexpected response format");
+      }
+      return response.data.reduce((sum, week) => sum + (week.total || 0), 0);
     } catch (e) {
-      console.warn(`Fallback also failed for ${owner}/${repo}:`, e.message);
+      if (e.message.includes("404") || e.message.includes("Not Found")) {
+        console.warn(`No commit activity stats for ${owner}/${repo} (404)`);
+      } else {
+        console.warn(`Fallback also failed for ${owner}/${repo}:`, e.message);
+      }
       return 0;
     }
   }
@@ -78,7 +89,7 @@ async function getBlogPostCount() {
   }
 }
 
-async function getPagesCrawledPerDay() {
+async function getTotalPagesIndexed() {
   try {
     // Public endpoint - no auth needed for crawler stats
     const response = await fetch(`${MWMBL_API_URL}/api/v1/crawler/stats`, {
@@ -88,13 +99,13 @@ async function getPagesCrawledPerDay() {
       throw new Error(`HTTP ${response.status}`);
     }
     const data = await response.json();
-    // Get the latest day's results_indexed_daily
-    const results = data.results_indexed_daily || {};
+    // Get the latest day's results_in_index_daily (total pages in index)
+    const results = data.results_in_index_daily || {};
     const dates = Object.keys(results).sort();
     const latestDate = dates[dates.length - 1];
     return results[latestDate] || 0;
   } catch (error) {
-    console.warn("Failed to get pages crawled:", error.message);
+    console.warn("Failed to get total pages indexed:", error.message);
     return 0;
   }
 }
@@ -125,9 +136,9 @@ function calculatePoints(metrics) {
 
   // Technology
   points.commits = Math.min(metrics.commits, GOALS.technology.commits.maxPoints);
-  points.pagesCrawledPerDay = Math.min(
-    Math.floor(metrics.pagesCrawledPerDay / 1_000_000) * GOALS.technology.pagesCrawledPerDay.pointsPerMillion,
-    GOALS.technology.pagesCrawledPerDay.maxPoints
+  points.totalPagesIndexed = Math.min(
+    Math.floor(metrics.totalPagesIndexed / 1_000_000) * GOALS.technology.totalPagesIndexed.pointsPerMillion,
+    GOALS.technology.totalPagesIndexed.maxPoints
   );
   points.ndcg = Math.min(metrics.ndcg * GOALS.technology.ndcg.pointsPerPercent, GOALS.technology.ndcg.maxPoints);
 
@@ -153,10 +164,10 @@ async function main() {
   console.log("Collecting progress metrics...");
 
   // Collect all metrics in parallel where possible
-  const [commitResults, blogPosts, pagesCrawled, ndcg] = await Promise.all([
+  const [commitResults, blogPosts, totalPagesIndexed, ndcg] = await Promise.all([
     Promise.all(REPOS.map(r => getCommitCount(r.owner, r.repo))),
     getBlogPostCount(),
-    getPagesCrawledPerDay(),
+    getTotalPagesIndexed(),
     getNDCGScore(),
   ]);
 
@@ -173,7 +184,7 @@ async function main() {
   const metrics = {
     // Technology
     commits,
-    pagesCrawledPerDay: pagesCrawled,
+    totalPagesIndexed,
     ndcg,
     // Community
     blogPosts,
