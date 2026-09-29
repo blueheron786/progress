@@ -3,14 +3,14 @@
     "commits": 1666,
     "totalPagesIndexed": 0,
     "ndcg": 10,
-    "blogPosts": 1,
+    "blogPosts": 11,
     "videos": 10,
     "volunteers": 26,
     "employees": 0,
     "incorporationPoints": 0,
     "affiliatedOrgs": 0,
     "bookCommits": 56,
-    "collectedAt": "2026-09-29T17:25:49.381Z",
+    "collectedAt": "2026-09-29T17:42:22.545Z",
     "repos": [
       {
         "label": "mwmbl (backend)",
@@ -30,7 +30,7 @@
     "commits": 1666,
     "totalPagesIndexed": 0,
     "ndcg": 10000,
-    "blogPosts": 100,
+    "blogPosts": 1100,
     "videos": 1000,
     "volunteers": 26,
     "employees": 0,
@@ -39,9 +39,9 @@
     "bookCommits": 560
   },
   "totals": {
-    "current": 13352,
+    "current": 14352,
     "max": 915000,
-    "percentage": 1.4592
+    "percentage": 1.5685
   },
   "goals": {
     "technology": {
@@ -99,5 +99,5 @@
       }
     }
   },
-  "collectedAt": "2026-09-29T17:25:49.381Z"
+  "collectedAt": "2026-09-29T17:42:22.545Z"
 }

@@ -27,7 +27,7 @@ const REPOS = [
 ];
 
 // Blog repo for post count
-const BLOG_REPO = { owner: "mwmbl", repo: "blog", path: "content" };
+const BLOG_REPO = { owner: "mwmbl", repo: "blog", path: "content/articles" };
 
 // Load manual/configurable metrics from manual-metrics.json (committed to main branch)
 const manualMetrics = JSON.parse(fs.readFileSync(path.join(process.cwd(), "manual-metrics.json"), "utf-8"));
