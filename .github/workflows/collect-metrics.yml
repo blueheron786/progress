@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: '0 2 * * *'  # Daily at 02:00 UTC
   workflow_dispatch:      # Manual trigger
+  push:
+    branches: [main]      # Run on push to main
 
 permissions:
   contents: write  # Needed to push to data branch
