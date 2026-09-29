@@ -7,7 +7,7 @@
     },
     "volunteers": {
       "value": 26,
-      "description": "Active volunteers (from Firefox extension stats) - update monthly"
+      "description": "Active volunteers (from Firefox extension stats) - update periodically"
     }
   },
   "organisation": {

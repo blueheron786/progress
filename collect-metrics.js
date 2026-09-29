@@ -206,7 +206,6 @@ async function main() {
   const outputPath = path.join(process.cwd(), "metrics.json");
   fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
   console.log(`Metrics written to ${outputPath}`);
-  console.log(`Total: ${totalPoints} / ${totalMaxPoints} (${percentage}%)`);
 }
 
 main().catch((err) => {

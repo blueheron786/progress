@@ -37,17 +37,6 @@ async function fetchJSON(url) {
   return response.json();
 }
 
-// Expose for console debugging
-window.progressDebug = {
-  toggleLocal: () => {
-    const next = !isLocalMode();
-    localStorage.setItem("progress-local-mode", next);
-    location.reload();
-  },
-  isLocal: isLocalMode,
-  getUrls: getUrls
-};
-
 function formatNumber(n) {
   return n.toLocaleString();
 }
@@ -120,16 +109,6 @@ function renderCategoryTable(categoryName, metrics, goals, manualConfig) {
         <td class="metric-points">${formatNumber(points)} / ${formatNumber(maxPoints)}</td>
       </tr>
     `);
-    // Debug: show raw goal value for pagesCrawledPerDay
-    if (def.key === "pagesCrawledPerDay") {
-      const rawGoal = categoryGoals[def.pointsKey]?.goal;
-      const rawMaxPoints = categoryGoals[def.pointsKey]?.maxPoints;
-      rows.push(`
-        <tr style="background:#fff3cd;font-size:0.8em;">
-          <td colspan="4"><strong>DEBUG:</strong> rawGoal=${JSON.stringify(rawGoal)}, rawMaxPoints=${JSON.stringify(rawMaxPoints)}, categoryGoals keys=${JSON.stringify(Object.keys(categoryGoals || {}))}</td>
-        </tr>
-      `);
-    }
   }
 
   // Category total row
@@ -184,10 +163,6 @@ async function main() {
       fetchJSON(dataUrl),
       fetchJSON(manualUrl),
     ]);
-
-    console.log('[Progress] manualData.goals:', manualData?.goals);
-    console.log('[Progress] manualData.goals.technology:', manualData?.goals?.technology);
-    console.log('[Progress] manualData.goals.technology.pagesCrawledPerDay:', manualData?.goals?.technology?.pagesCrawledPerDay);
 
     // Merge: autoData has metrics + points + totals, manualData has goals + manual values
     const metrics = autoData.metrics;
