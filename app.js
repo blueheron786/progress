@@ -5,8 +5,8 @@
  */
 
 // Production URLs (GitHub raw) - note: data branch uses /data/ not /data/main/
-const PROD_DATA_URL = "https://raw.githubusercontent.com/blueheron786/progress/data/metrics.json";
-const PROD_MANUAL_URL = "https://raw.githubusercontent.com/blueheron786/progress/main/manual-metrics.json";
+const PROD_DATA_URL = "https://raw.githubusercontent.com/mwmbl/progress/data/metrics.json";
+const PROD_MANUAL_URL = "https://raw.githubusercontent.com/mwmbl/progress/main/manual-metrics.json";
 
 // Local file paths (relative to index.html)
 const LOCAL_DATA_URL = "metrics.json";

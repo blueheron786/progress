@@ -92,7 +92,7 @@ A sample `metrics.json` is included in the repo with example data matching the b
 
 ### 1. Create GitHub Repository
 ```bash
-gh repo create blueheron786/progress --public --source=. --push
+gh repo create mwmbl/progress --public --source=. --push
 ```
 
 ### 2. Enable GitHub Pages
