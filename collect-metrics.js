@@ -89,6 +89,10 @@ async function getBlogPostCount() {
 }
 
 async function getTotalPagesIndexed() {
+  // Hard-coded to 500k — depends on a turned-off process that estimates
+  // total index size once daily (the crawler stats endpoint is no longer updated)
+  return 500_000;
+  
   try {
     // Public endpoint - no auth needed for crawler stats
     const response = await fetch(`${MWMBL_API_URL}/api/v1/crawler/stats`, {
