@@ -3,7 +3,7 @@
  * Collect all progress metrics and write to metrics.json
  * Run via: npm run collect
  * Requires: MWMBL_API_URL env var
- * Optional: GITHUB_TOKEN (for higher rate limits), MWMBL_API_KEY
+ * Optional: GITHUB_TOKEN (for higher rate limits)
  */
 
 import { Octokit } from "octokit";
@@ -11,10 +11,8 @@ import fs from "fs";
 import path from "path";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const MWMBL_API_KEY = process.env.MWMBL_API_KEY;
 const MWMBL_API_URL = process.env.MWMBL_API_URL || "https://api.mwmbl.org";
 
-// MWMBL_API_KEY is optional - crawler stats endpoint is public
 // GITHUB_TOKEN is optional - unauthenticated requests work but are rate limited (60/hr)
 
 const octokit = new Octokit({ auth: GITHUB_TOKEN });
@@ -67,7 +65,7 @@ async function getCommitCount(owner, repo) {
       } else {
         console.warn(`Fallback also failed for ${owner}/${repo}:`, e.message);
       }
-      return 0;
+      throw new Error(`Failed to get commit count for ${owner}/${repo}`);
     }
   }
 }
@@ -84,7 +82,7 @@ async function getBlogPostCount() {
     return items.filter((item) => item.name.endsWith(".md") || item.name.endsWith(".markdown")).length;
   } catch (error) {
     console.warn("Failed to get blog post count:", error.message);
-    return 0;
+    throw new Error("Failed to get blog post count");
   }
 }
 
@@ -128,7 +126,7 @@ async function getNDCGScore() {
     return 10; // placeholder percentage
   } catch (error) {
     console.warn("Failed to get NDCG score:", error.message);
-    return 0;
+    throw new Error("Failed to get NDCG score");
   }
 }
 
@@ -166,16 +164,77 @@ function calculatePoints(metrics) {
 async function main() {
   console.log("Collecting progress metrics...");
 
-  // Collect all metrics in parallel where possible
+  // Read existing metrics to preserve values if collection fails
+  const outputPath = path.join(process.cwd(), "metrics.json");
+  let existingMetrics = null;
+  try {
+    existingMetrics = JSON.parse(fs.readFileSync(outputPath, "utf-8"));
+    console.log("Loaded existing metrics for fallback");
+  } catch {
+    console.log("No existing metrics.json found");
+  }
+
+  // Collect all metrics - use Promise.allSettled to handle individual failures
+  const commitResultsPromise = Promise.allSettled(REPOS.map(r => getCommitCount(r.owner, r.repo)));
+  const blogPostsPromise = Promise.allSettled([getBlogPostCount()]);
+  const totalPagesIndexedPromise = Promise.allSettled([getTotalPagesIndexed()]);
+  const ndcgPromise = Promise.allSettled([getNDCGScore()]);
+
   const [commitResults, blogPosts, totalPagesIndexed, ndcg] = await Promise.all([
-    Promise.all(REPOS.map(r => getCommitCount(r.owner, r.repo))),
-    getBlogPostCount(),
-    getTotalPagesIndexed(),
-    getNDCGScore(),
+    commitResultsPromise,
+    blogPostsPromise,
+    totalPagesIndexedPromise,
+    ndcgPromise,
   ]);
 
-  const commits = commitResults.reduce((sum, c) => sum + c, 0);
-  const bookCommits = commitResults[2] || 0; // book repo is 4th
+  // Check for failures and use existing values as fallback
+  let hasFailures = false;
+  const commitCounts = [];
+
+  for (let i = 0; i < commitResults.length; i++) {
+    const result = commitResults[i];
+    if (result.status === "fulfilled") {
+      commitCounts.push(result.value);
+    } else {
+      hasFailures = true;
+      const repoLabel = REPOS[i].label;
+      console.error(`Failed to get commit count for ${repoLabel}:`, result.reason.message);
+      // Use existing value if available
+      const existingValue = existingMetrics?.metrics?.repos?.[i]?.commits ?? 0;
+      commitCounts.push(existingValue);
+      console.log(`Using existing commit count for ${repoLabel}: ${existingValue}`);
+    }
+  }
+
+  // Helper to extract value from Promise.allSettled result array
+  function getSettledValue(resultArray, label, fallbackValue) {
+    const result = resultArray[0];
+    if (result.status === "fulfilled") {
+      return result.value;
+    } else {
+      hasFailures = true;
+      console.error(`Failed to get ${label}:`, result.reason?.message || result.reason);
+      return fallbackValue;
+    }
+  }
+
+  const blogPostCount = getSettledValue(blogPosts, "blog post count", existingMetrics?.metrics?.blogPosts ?? 0);
+  const pagesIndexed = getSettledValue(totalPagesIndexed, "total pages indexed", existingMetrics?.metrics?.totalPagesIndexed ?? 500_000);
+  const ndcgScore = getSettledValue(ndcg, "NDCG score", existingMetrics?.metrics?.ndcg ?? 10);
+
+  // If we had failures and no existing metrics to fall back to, abort
+  if (hasFailures && !existingMetrics) {
+    console.error("Collection failed and no existing metrics to fall back to. Aborting write.");
+    process.exit(1);
+  }
+
+  // If we had failures but have existing metrics, warn but continue with fallback values
+  if (hasFailures) {
+    console.warn("Some metrics failed to collect; using existing values as fallback");
+  }
+
+  const commits = commitCounts.reduce((sum, c) => sum + c, 0);
+  const bookCommits = commitCounts[2] || 0; // book repo is 3rd (index 2)
 
   // Calculate incorporation points from manual config
   const incorporationPoints = [
@@ -187,10 +246,10 @@ async function main() {
   const metrics = {
     // Technology
     commits,
-    totalPagesIndexed,
-    ndcg,
+    totalPagesIndexed: pagesIndexed,
+    ndcg: ndcgScore,
     // Community
-    blogPosts,
+    blogPosts: blogPostCount,
     videos: manualMetrics.community.videos.value,
     volunteers: manualMetrics.community.volunteers.value,
     // Organisation
@@ -200,7 +259,7 @@ async function main() {
     bookCommits,
     // Metadata
     collectedAt: new Date().toISOString(),
-    repos: REPOS.map((r, i) => ({ label: r.label, commits: commitResults[i] })),
+    repos: REPOS.map((r, i) => ({ label: r.label, commits: commitCounts[i] })),
   };
 
   const { points, totalPoints, totalMaxPoints, percentage } = calculatePoints(metrics);
@@ -217,7 +276,6 @@ async function main() {
     collectedAt: metrics.collectedAt,
   };
 
-  const outputPath = path.join(process.cwd(), "metrics.json");
   fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
   console.log(`Metrics written to ${outputPath}`);
 }
