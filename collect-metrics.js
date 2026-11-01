@@ -33,40 +33,15 @@ const GOALS = manualMetrics.goals;
 
 async function getCommitCount(owner, repo) {
   try {
-    // Use the GitHub API to get total commit count from contributors stats (all-time)
-    const contributors = await octokit.rest.repos.getContributorsStats({
-      owner,
-      repo,
-    });
-    if (!Array.isArray(contributors.data)) {
-      throw new Error("Unexpected response format");
-    }
-    return contributors.data.reduce((sum, c) => sum + (c.total || 0), 0);
+    // With per_page=1 the last page number equals the total commit count on the default branch.
+    // Unlike contributor stats, this includes merge commits and isn't capped to the top 100 contributors.
+    const response = await octokit.rest.repos.listCommits({ owner, repo, per_page: 1 });
+    const lastLink = /<[^>]*[?&]page=(\d+)[^>]*>;\s*rel="last"/.exec(response.headers.link || "");
+    if (lastLink) return parseInt(lastLink[1], 10);
+    return response.data.length;
   } catch (error) {
-    // 404 means the repo doesn't have contributor stats (e.g., empty repo or disabled)
-    if (error.message.includes("404") || error.message.includes("Not Found")) {
-      console.warn(`No contributor stats for ${owner}/${repo} (404)`);
-    } else {
-      console.warn(`Failed to get commit count from contributors for ${owner}/${repo}:`, error.message);
-    }
-    // Fallback: try commit activity stats (last year only)
-    try {
-      const response = await octokit.rest.repos.getCommitActivityStats({
-        owner,
-        repo,
-      });
-      if (!Array.isArray(response.data)) {
-        throw new Error("Unexpected response format");
-      }
-      return response.data.reduce((sum, week) => sum + (week.total || 0), 0);
-    } catch (e) {
-      if (e.message.includes("404") || e.message.includes("Not Found")) {
-        console.warn(`No commit activity stats for ${owner}/${repo} (404)`);
-      } else {
-        console.warn(`Fallback also failed for ${owner}/${repo}:`, e.message);
-      }
-      throw new Error(`Failed to get commit count for ${owner}/${repo}`);
-    }
+    console.warn(`Failed to get commit count for ${owner}/${repo}:`, error.message);
+    throw new Error(`Failed to get commit count for ${owner}/${repo}`);
   }
 }
 

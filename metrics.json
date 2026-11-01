@@ -1,47 +1,47 @@
 {
   "metrics": {
-    "commits": 1785,
-    "totalPagesIndexed": 775554027,
+    "commits": 2172,
+    "totalPagesIndexed": 777236594,
     "ndcg": 10,
-    "blogPosts": 11,
+    "blogPosts": 13,
     "videos": 10,
     "volunteers": 26,
     "employees": 0,
     "incorporationPoints": 0,
     "affiliatedOrgs": 0,
-    "bookCommits": 57,
-    "collectedAt": "2026-10-10T19:42:18.797Z",
+    "bookCommits": 91,
+    "collectedAt": "2026-11-01T01:28:08.369Z",
     "repos": [
       {
         "label": "mwmbl (backend)",
-        "commits": 1516
+        "commits": 1798
       },
       {
         "label": "front-end (SvelteKit)",
-        "commits": 212
+        "commits": 283
       },
       {
         "label": "book (documentation)",
-        "commits": 57
+        "commits": 91
       }
     ]
   },
   "points": {
-    "commits": 1785,
-    "totalPagesIndexed": 38750,
+    "commits": 2172,
+    "totalPagesIndexed": 1165.5,
     "ndcg": 10000,
-    "blogPosts": 1100,
+    "blogPosts": 1300,
     "videos": 1000,
     "volunteers": 26,
     "employees": 0,
     "incorporation": 0,
     "affiliatedOrgs": 0,
-    "bookCommits": 570
+    "bookCommits": 910
   },
   "totals": {
-    "current": 53231,
+    "current": 16573.5,
     "max": 915000,
-    "percentage": 5.8176
+    "percentage": 1.8113
   },
   "goals": {
     "technology": {
@@ -52,7 +52,7 @@
       },
       "totalPagesIndexed": {
         "goal": 100000000000,
-        "pointsPerMillion": 50,
+        "pointsPerMillion": 1.5,
         "maxPoints": 150000
       },
       "ndcg": {
@@ -99,5 +99,5 @@
       }
     }
   },
-  "collectedAt": "2026-10-10T19:42:18.797Z"
+  "collectedAt": "2026-11-01T01:28:08.369Z"
 }
